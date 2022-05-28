@@ -4,7 +4,7 @@ class Url:
     pr: ParseResult
     type: str
 
-    def __init__(self, host, url):
+    def __init__(self, url, host = ''):
         self.pr = urlsplit(url)
         if self.pr.netloc == '':
             self.pr = self.pr._replace(netloc=host)
@@ -21,3 +21,13 @@ class Url:
 
     def __str__(self) -> str:
         return self.pr.geturl()
+
+    def host(self) -> str:
+        return self.pr.netloc
+
+    @staticmethod
+    def from_list(host, urls):
+        url = []
+        for u in urls:
+            url.append(Url(u, host))
+        return url
