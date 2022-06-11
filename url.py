@@ -4,10 +4,12 @@ class Url:
     pr: ParseResult
     type: str
 
-    def __init__(self, url, host = ''):
+    def __init__(self, url, host = '', scheme = 'http'):
         self.pr = urlsplit(url)
         if self.pr.netloc == '':
             self.pr = self.pr._replace(netloc=host)
+        if self.pr.scheme == '':
+            self.pr = self.pr._replace(scheme=scheme)
 
         path = self.pr.path.lower()
         if path.endswith('.html'):
@@ -17,10 +19,13 @@ class Url:
         elif path.endswith('.css'):
             self.type = 'style'
         elif path.endswith(('.png', '.jpg', '.svg')):
-            self.type = 'style'
+            self.type = 'media'
 
     def __str__(self) -> str:
-        return self.pr.geturl()
+        url = self.pr.geturl()
+        # clean
+        url = url.replace('/./', '/')
+        return url
 
     def host(self) -> str:
         return self.pr.netloc
