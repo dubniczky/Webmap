@@ -30,9 +30,17 @@ def remove_ignored(urls : list[Url]) -> list[Url]:
             del urls[i]
     return urls
 
-def crawl(url : str):
-    searched = [url]
-    urls = []
+def crawl(url : str, searched = []) -> list[Url]:
+    searched += [url]
+    current = parse_site(url)
+    print('Mapping:', url)
+    targets = []
+    for u in current:
+        if u.type in ['page', 'unknown']:
+            targets.append(u)
+            current += crawl(str(u), searched)
+    return current
+
 
 if __name__ == '__main__':
-    print( [str(i) for i in parse_site('http://netpeak.hu')] )
+    print( [str(i) for i in crawl('http://localhost:8080')] )
