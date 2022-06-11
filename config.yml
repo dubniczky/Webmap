@@ -1,5 +1,5 @@
 
-media:
+extensions:
   # List of extensions considered pages and will be recursively searched
   page:
     - .html
