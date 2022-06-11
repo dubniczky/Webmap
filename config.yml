@@ -1,4 +1,8 @@
+# List of urls to ignore when matched
+# These mostly contain well-known urls to schemas and other configurations
+ignorelist: lists/ignore.txt
 
+# List of extensions to categorize urls by
 extensions:
   # List of extensions considered pages and will be recursively searched
   page:
