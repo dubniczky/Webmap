@@ -3,7 +3,7 @@ from urllib.parse import urlsplit, ParseResult
 from config import config
 
 def get_extensions(name):
-    return tuple(config.extensions[name])
+    return tuple(config['extensions'][name])
 
 class Url:
     pr: ParseResult
