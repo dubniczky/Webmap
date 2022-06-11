@@ -25,6 +25,10 @@ class Url:
             self.type = 'style'
         elif path.endswith(get_extensions('media')):
             self.type = 'media'
+        elif path.endswith(get_extensions('special')):
+            self.type = 'special'
+        else:
+            self.type = 'unknown'
 
     def __str__(self) -> str:
         url = self.pr.geturl()
