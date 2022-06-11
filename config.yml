@@ -1,0 +1,50 @@
+
+media:
+  # List of extensions considered pages and will be recursively searched
+  page:
+    - .html
+    - .htm
+    - .htc
+    - .dhtml
+    - .shtml
+    - .phtml
+    - .zhtml
+    - .mht
+    - .cshtml
+    - .xhtm
+    - .site
+    - .php
+    - .aspx
+    - .ssp
+    - .mjs
+  # Scripts will be mapped, but not searched
+  script:
+    - .js
+    - .cjs
+    - .mjs
+    - .cs
+    - .ts
+    - .tsx
+    - .es
+    - .es6
+    - .jsx
+  # Data will be mapped and searched
+  data:
+    - .json
+    - .xml
+  # Styles will be mapped and searched
+  style:
+    - .css
+    - .scss
+    - .sass
+  # Media files will be mapped but not searched
+  media:
+    - .png
+    - .jpg
+    - .jpeg
+    - .svg
+  # Files of special interest that will be highlighted, but not searched
+  special:
+    - .htaccess
+    - .pub
+    - .cert
