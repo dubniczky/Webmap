@@ -22,6 +22,11 @@ class Url:
         url = self.pr.geturl()
         # clean
         url = url.replace('/./', '/')
+
+        frag_index = url.find('#')
+        if frag_index != -1:
+            url = url[0:frag_index]
+
         return url
 
     def host(self) -> str:
