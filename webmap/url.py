@@ -42,6 +42,8 @@ class Url:
             return 'style'
         elif path.endswith(get_extensions('media')):
             return 'media'
+        elif path.endswith(get_extensions('document')):
+            return 'document'
         elif path.endswith(get_extensions('special')):
             return 'special'
         elif '.' not in path.split('/')[-1]:
