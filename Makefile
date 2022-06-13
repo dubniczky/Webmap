@@ -5,6 +5,10 @@ py := python
 demo_path := ./demo
 demo_port := 8080
 
+# Does a test run of the application
+run:
+	$(py) webmap/crawler.py http://localhost:8080
+
 # Start serving the demo server satic files
 .PHONY: demo
 demo: $(demo_path)

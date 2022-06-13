@@ -1,4 +1,5 @@
 import requests
+import sys
 
 import extract
 from url import Url
@@ -43,4 +44,11 @@ def crawl(url : str, searched = []) -> list[Url]:
 
 
 if __name__ == '__main__':
-    print( [str(i) for i in crawl('http://localhost:8080')] )
+    if len(sys.argv) < 2:
+        print('Usage: webmap [URL]')
+    url = sys.argv[1]
+
+    print('Url:', url)
+
+    urls = [url] + [str(i) for i in crawl(url)]
+    print( urls )
