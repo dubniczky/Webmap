@@ -42,6 +42,8 @@ extensions:
     - .jpg
     - .jpeg
     - .svg
+    - .mp3
+    - .mp4
   # Files of special interest that will be highlighted, but not searched
   special:
     - .htaccess
