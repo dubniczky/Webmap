@@ -16,19 +16,7 @@ class Url:
         if self.pr.scheme == '':
             self.pr = self.pr._replace(scheme=scheme)
 
-        path = self.pr.path.lower()
-        if path.endswith(get_extensions('page')):
-            self.type = 'page'
-        elif path.endswith(get_extensions('script')):
-            self.type = 'script'
-        elif path.endswith(get_extensions('style')):
-            self.type = 'style'
-        elif path.endswith(get_extensions('media')):
-            self.type = 'media'
-        elif path.endswith(get_extensions('special')):
-            self.type = 'special'
-        else:
-            self.type = 'unknown'
+        self.type = self.get_content_type()
 
     def __str__(self) -> str:
         url = self.pr.geturl()
@@ -38,6 +26,24 @@ class Url:
 
     def host(self) -> str:
         return self.pr.netloc
+
+    def get_content_type(self):
+        path: str = self.pr.path.lower()
+        if path.endswith(get_extensions('page')):
+            return 'page'
+        elif path.endswith(get_extensions('script')):
+            return 'script'
+        elif path.endswith(get_extensions('style')):
+            return 'style'
+        elif path.endswith(get_extensions('media')):
+            return 'media'
+        elif path.endswith(get_extensions('special')):
+            return 'special'
+        elif '.' not in path.split('/')[-1]:
+            # Last segment contains no dot -> probably a page
+            return 'page'
+        else:
+            return 'unknown'
 
     @staticmethod
     def from_list(host, urls):
