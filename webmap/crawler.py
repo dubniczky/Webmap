@@ -13,7 +13,7 @@ def get(url : str) -> str | None:
             return req.content.decode('utf-8')
         else:
             return None
-    except:
+    except Exception:
         return None
 
 def parse_site(url : str) -> list[Url]:
@@ -52,7 +52,7 @@ def crawl(start: Url, url: Url = None, searched = []) -> list[Url]:
         if str(u) in searched:
             continue
         # Different website
-        if start.pr.netloc != url.pr.netloc:
+        if start.pr.netloc != u.pr.netloc:
             continue
 
         current += crawl(start, u, searched)
