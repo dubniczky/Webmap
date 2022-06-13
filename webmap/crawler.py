@@ -60,11 +60,14 @@ def crawl(start: Url, url: Url = None, searched = []) -> list[Url]:
 
 
 if __name__ == '__main__':
-    if len(sys.argv) < 2:
-        print('Usage: webmap [URL]')
+    if len(sys.argv) < 3:
+        print('Usage: webmap [URL] [OUTPUT_FILE]')
     url = sys.argv[1]
+    file = sys.argv[2]
 
     print('Url:', url)
 
     urls = [url] + [str(i) for i in crawl(Url(url))]
-    print( urls )
+
+    with open(file, 'w') as f:
+        f.write( '\n'.join(urls) )
