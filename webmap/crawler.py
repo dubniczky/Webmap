@@ -37,7 +37,7 @@ def remove_ignored(urls : list[Url]) -> list[Url]:
             del urls[i]
     return urls
 
-def crawl(start: Url, url: Url = None, searched = []) -> list[Url]:
+def crawl(start: Url, url: Url = None, searched = []) -> list[str]:
     if url is None:
         url = start
     url_s = str(url)
@@ -58,6 +58,8 @@ def crawl(start: Url, url: Url = None, searched = []) -> list[Url]:
         current += crawl(start, u, searched)
     return current
 
+def unique_list(l):
+    return list(set(l))
 
 if __name__ == '__main__':
     if len(sys.argv) < 3:
@@ -67,7 +69,7 @@ if __name__ == '__main__':
 
     print('Url:', url)
 
-    urls = [url] + [str(i) for i in crawl(Url(url))]
+    urls = unique_list( [url] + [str(i) for i in crawl(Url(url))] )
 
     with open(file, 'w') as f:
         f.write( '\n'.join(urls) )
