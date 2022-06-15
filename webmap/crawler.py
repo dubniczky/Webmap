@@ -11,26 +11,28 @@ def get(url : str) -> str | None:
     try:
         req = requests.get(url, allow_redirects=True)
         if req:
-            return req.content.decode('utf-8')
+            return (req.content.decode('utf-8'), req.status_code)
         else:
             return None
     except Exception:
         return None
 
-def parse_site(url : str) -> list[Url]:
+def parse_site(url : str) -> tuple[list[Url], int, int] | None:
     u = Url(url)
     host = u.host()
     page = get(url)
 
     if page is None:
-        return []
+        return None
+
+    content, status = page
 
     urls = []
-    urls += Url.from_list(host, extract.raw_urls(page))
-    urls += Url.from_list(host, extract.hrefs(page))
-    urls += Url.from_list(host, extract.srcs(page))
+    urls += Url.from_list(host, extract.raw_urls(content))
+    urls += Url.from_list(host, extract.hrefs(content))
+    urls += Url.from_list(host, extract.srcs(content))
 
-    return remove_ignored(urls)
+    return (remove_ignored(urls), len(content), status)
 
 def remove_ignored(urls : list[Url]) -> list[Url]:
     for i in reversed(range(0, len(urls))):
@@ -42,11 +44,23 @@ def crawl(start: Url, url: Url = None, searched = []) -> tuple[list[str], int]:
     if url is None:
         url = start
     url_s = str(url)
-    print('Mapping:', url_s)
+    print(f'Mapping: ( ... ) {url_s}', end=' ', flush=True)
     searched += [url_s]
     map_count = 1
+    start_time = perf_counter()
     current = parse_site(url_s)
-    for u in current:
+    delta_time = trimf( perf_counter() - start_time )
+    if current is None:
+        return ([], 1)
+
+    curr_urls, content_length, status_code = current
+    sub_urls = []
+
+    print('\r', end='')
+    content_size = trimf(content_length / 1024)
+    print(f'Mapping: ( {status_code} ) [ {content_size}kb, {delta_time}s ] {url_s}', flush=True)
+
+    for u in curr_urls:
         # Not a page
         if u.type not in ['page', 'unknown']:
             continue
@@ -57,10 +71,10 @@ def crawl(start: Url, url: Url = None, searched = []) -> tuple[list[str], int]:
         if start.pr.netloc != u.pr.netloc:
             continue
 
-        urls, maps = crawl(start, u, searched)
-        current += urls
+        c_urls, maps = crawl(start, u, searched)
+        sub_urls += c_urls
         map_count += maps
-    return (current, map_count)
+    return (curr_urls + sub_urls, map_count)
 
 def unique_list(l):
     return list(set(l))
