@@ -62,7 +62,7 @@ def crawl(start: Url, url: Url = None, searched = []) -> tuple[list[str], int]:
 
     for u in curr_urls:
         # Not a page
-        if u.type not in ['page', 'unknown']:
+        if u.type not in ['page', 'data', 'style', 'unknown']:
             continue
         # Already searched
         if str(u) in searched:
