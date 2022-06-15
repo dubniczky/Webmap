@@ -1,3 +1,10 @@
+# Content types to search
+search:
+  - page
+  - data
+  - style
+  - unknown # Speical flag for anything not in the extension list
+
 # List of extensions to categorize urls by
 extensions:
   # List of extensions considered pages and will be recursively searched

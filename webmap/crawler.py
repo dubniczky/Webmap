@@ -13,19 +13,17 @@ def get(url : str) -> str | None:
         if req:
             return (req.content.decode('utf-8'), req.status_code)
         else:
-            return None
+            return (None, req.status_code)
     except Exception:
-        return None
+        return (None, 0)
 
 def parse_site(url : str) -> tuple[list[Url], int, int] | None:
     u = Url(url)
     host = u.host()
-    page = get(url)
+    content, status = get(url)
 
-    if page is None:
-        return None
-
-    content, status = page
+    if content is None:
+        return (None, 0, status)
 
     urls = []
     urls += Url.from_list(host, extract.raw_urls(content))
@@ -43,26 +41,29 @@ def remove_ignored(urls : list[Url]) -> list[Url]:
 def crawl(start: Url, url: Url = None, searched = []) -> tuple[list[str], int]:
     if url is None:
         url = start
+
     url_s = str(url)
-    print(f'Mapping: ( ... ) {url_s}', end=' ', flush=True)
     searched += [url_s]
     map_count = 1
     start_time = perf_counter()
-    current = parse_site(url_s)
-    delta_time = trimf( perf_counter() - start_time )
-    if current is None:
-        return ([], 1)
-
-    curr_urls, content_length, status_code = current
     sub_urls = []
 
-    print('\r', end='')
-    content_size = trimf(content_length / 1024)
-    print(f'Mapping: ( {status_code} ) [ {content_size}kb, {delta_time}s ] {url_s}', flush=True)
+    # Search the site
+    print(f'Scanning: ( ... ) {url_s}', end=' ', flush=True)
+    curr_urls, content_length, status_code = parse_site(url_s)
 
+    # Log results
+    if curr_urls is None:
+        print(f'\Scanning: ( {status_code} ) [ FAILED ] {url_s}', flush=True)
+        return ([], 1)
+    content_size = trimf(content_length / 1024)
+    delta_time = trimf( perf_counter() - start_time )
+    print(f'\Scanning: ( {status_code} ) [ {content_size}kb, {delta_time}s ] {url_s}', flush=True)
+
+    # Search detected sites
     for u in curr_urls:
         # Not a page
-        if u.type not in ['page', 'data', 'style', 'unknown']:
+        if u.type not in config['search']:
             continue
         # Already searched
         if str(u) in searched:
@@ -74,6 +75,7 @@ def crawl(start: Url, url: Url = None, searched = []) -> tuple[list[str], int]:
         c_urls, maps = crawl(start, u, searched)
         sub_urls += c_urls
         map_count += maps
+
     return (curr_urls + sub_urls, map_count)
 
 def unique_list(l):
@@ -96,9 +98,9 @@ if __name__ == '__main__':
 
     delta_time = trimf( perf_counter() - start_time )
     print('========')
-    print(f'Mapping completed in: {delta_time}s')
-    print(f'Mapped sites: {map_count}')
-    print(f'Detected endpoints: {len(unique_urls)}')
+    print(f'Scanned completed in: {delta_time}s')
+    print(f'Scanned sites: {map_count}')
+    print(f'Mapped endpoints: {len(unique_urls)}')
 
 
     with open(file, 'w') as f:
