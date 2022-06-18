@@ -1,5 +1,9 @@
-# Environment
-py := python
+# Environment detection
+# "python" command on windows, "python3" on others
+py := python3
+ifeq ($(OS),Windows_NT)
+	py := python
+endif
 
 # Demo
 demo_path := ./demo
