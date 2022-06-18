@@ -54,11 +54,11 @@ def crawl(start: Url, url: Url = None, searched = []) -> tuple[list[str], int]:
 
     # Log results
     if curr_urls is None:
-        print(f'\Scanning: ( {status_code} ) [ FAILED ] {url_s}', flush=True)
+        print(f'\rScanning: ( {status_code} ) [ FAILED ] {url_s}', flush=True)
         return ([], 1)
     content_size = trimf(content_length / 1024)
     delta_time = trimf( perf_counter() - start_time )
-    print(f'\Scanning: ( {status_code} ) [ {content_size}kb, {delta_time}s ] {url_s}', flush=True)
+    print(f'\rScanning: ( {status_code} ) [ {content_size}kb, {delta_time}s ] {url_s}', flush=True)
 
     # Search detected sites
     for u in curr_urls:
