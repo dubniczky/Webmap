@@ -4,8 +4,8 @@ import sys
 
 import extract
 from url import Url
-
 from config import config
+from modutils import trimf, unique_list
 
 def get(url : str) -> str | None:
     try:
@@ -77,12 +77,6 @@ def crawl(start: Url, url: Url = None, searched = []) -> tuple[list[str], int]:
         map_count += maps
 
     return (curr_urls + sub_urls, map_count)
-
-def unique_list(l):
-    return list(set(l))
-
-def trimf(f: float) -> str:
-    return str( round(f, 2) )
 
 if __name__ == '__main__':
     if len(sys.argv) < 3:
