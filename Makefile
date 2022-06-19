@@ -15,6 +15,11 @@ demo_url := http://localhost:8080
 run:
 	$(py) webmap/crawler.py $(demo_url) map.txt
 
+# Run pylint on the application
+.PHONY: lint
+lint:
+	$(py) -m pylint webmap/*
+
 # Start serving the demo server satic files
 .PHONY: demo
 demo: $(demo_path)
