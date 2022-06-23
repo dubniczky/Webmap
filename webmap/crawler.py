@@ -1,11 +1,12 @@
 from time import perf_counter
-import requests
 import sys
+import requests
 
 import extract
 from url import Url
-
 from config import config
+from modutils import trimf, unique_list
+
 
 def get(url : str) -> str | None:
     try:
@@ -14,7 +15,7 @@ def get(url : str) -> str | None:
             return (req.content.decode('utf-8'), req.status_code)
         else:
             return (None, req.status_code)
-    except Exception:
+    except UnicodeDecodeError:
         return (None, 0)
 
 def parse_site(url : str) -> tuple[list[Url], int, int] | None:
@@ -38,9 +39,11 @@ def remove_ignored(urls : list[Url]) -> list[Url]:
             del urls[i]
     return urls
 
-def crawl(start: Url, url: Url = None, searched = []) -> tuple[list[str], int]:
+def crawl(start: Url, url: Url = None, searched = None) -> tuple[list[str], int]:
     if url is None:
         url = start
+    if searched is None:
+        searched = []
 
     url_s = str(url)
     searched += [url_s]
@@ -54,11 +57,11 @@ def crawl(start: Url, url: Url = None, searched = []) -> tuple[list[str], int]:
 
     # Log results
     if curr_urls is None:
-        print(f'\Scanning: ( {status_code} ) [ FAILED ] {url_s}', flush=True)
+        print(f'\rScanning: ( {status_code} ) [ FAILED ] {url_s}', flush=True)
         return ([], 1)
     content_size = trimf(content_length / 1024)
     delta_time = trimf( perf_counter() - start_time )
-    print(f'\Scanning: ( {status_code} ) [ {content_size}kb, {delta_time}s ] {url_s}', flush=True)
+    print(f'\rScanning: ( {status_code} ) [ {content_size}kb, {delta_time}s ] {url_s}', flush=True)
 
     # Search detected sites
     for u in curr_urls:
@@ -78,13 +81,7 @@ def crawl(start: Url, url: Url = None, searched = []) -> tuple[list[str], int]:
 
     return (curr_urls + sub_urls, map_count)
 
-def unique_list(l):
-    return list(set(l))
-
-def trimf(f: float) -> str:
-    return str( round(f, 2) )
-
-if __name__ == '__main__':
+def main():
     if len(sys.argv) < 3:
         print('Usage: webmap [URL] [OUTPUT_FILE]')
     url = sys.argv[1]
@@ -103,5 +100,8 @@ if __name__ == '__main__':
     print(f'Mapped endpoints: {len(unique_urls)}')
 
 
-    with open(file, 'w') as f:
+    with open(file, 'w', encoding='utf8') as f:
         f.write( '\n'.join(unique_urls) )
+
+if __name__ == '__main__':
+    main()

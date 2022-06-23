@@ -1,5 +1,9 @@
-# Environment
-py := python
+# Environment detection
+# "python" command on windows, "python3" on others
+py := python3
+ifeq ($(OS),Windows_NT)
+	py := python
+endif
 
 # Demo
 demo_path := ./demo
@@ -10,6 +14,11 @@ demo_url := http://localhost:8080
 .PHONY: run
 run:
 	$(py) webmap/crawler.py $(demo_url) map.txt
+
+# Run pylint on the application
+.PHONY: lint
+lint:
+	$(py) -m pylint webmap/*
 
 # Start serving the demo server satic files
 .PHONY: demo

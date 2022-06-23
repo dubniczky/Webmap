@@ -8,68 +8,54 @@ search:
 # List of extensions to categorize urls by
 extensions:
   # List of extensions considered pages and will be recursively searched
-  page:
-    - .html
-    - .htm
-    - .htc
-    - .dhtml
-    - .shtml
-    - .phtml
-    - .zhtml
-    - .mht
-    - .cshtml
-    - .xhtm
-    - .site
-    - .php
-    - .aspx
-    - .ssp
-    - .mjs
+  page: [
+    .htm, .xhtm, .mht, .htc,
+    .html, .shtml, .dhtml, .zhtml, .cshtml,
+    .php, .php3, .php5, .php7, .phtml,
+    .aspx,
+    .site,
+    .ssp,
+    .mjs, .ejs
+  ]
   # Scripts will be mapped, but not searched
-  script:
-    - .js
-    - .cjs
-    - .cs
-    - .ts
-    - .tsx
-    - .es
-    - .es6
-    - .jsx
+  script: [
+    .js, .cjs, .mjs, .jsx, #JavaScript
+    .ts, .tsx, #TypeScript
+    .es, .es6, #ECMAScript
+    .cs, .coffee #CoffeeScript
+  ]
   # Data will be mapped and searched
-  data:
-    - .json
-    - .xml
+  data: [
+    .json, .yml, .yaml, #JS style config
+    .xml #Markup
+  ]
   # Styles will be mapped and searched
-  style:
-    - .css
-    - .scss
-    - .sass
+  style: [
+    .css, #raw css
+    .scss, .sass, #transpiled
+  ]
   # Media files will be mapped but not searched
-  media:
-    - .png
-    - .jpg
-    - .jpeg
-    - .svg
-    - .mp3
-    - .mp4
+  media: [
+    .png, .jpg, .jpeg, #rasterized image
+    .svg, #verctor image
+    .mp3, .mp4, #audio
+    .mp4 #video
+  ]
   # Document files will be mapped but not searched
-  document:
-    - .pdf
-    - .doc
-    - .docx
-    - .xls
-    - .xlsx
-    - .ppt
-    - .pptx
-    - .odt
-    - .ods
+  document: [
+    .pdf, .xps, #static layout
+    .doc, .xls, ppt, #Microsoft
+    .docx, .xlsx, .pptx, #OOXML
+    .odt, .ods, .odp # Open Format
+  ]
   # Files of special interest that will be highlighted, but not searched
   special:
-    - .htaccess
-    - .pub
-    - .cert
-    - .txt
+    - .htaccess #apache local config
+    - .pub #public key
+    - .cert #certificate file
+    - .txt #raw text
 
-# List of urls to ignore when matched
+# List of urls to ignore when matched (beginning is checked)
 # These mostly contain well-known urls to schemas and other configurations
 ignorelist:
   - http://www.w3.org/2000/svg
