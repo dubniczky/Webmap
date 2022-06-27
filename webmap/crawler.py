@@ -1,11 +1,10 @@
 from time import perf_counter
-import sys
 import requests
 
 import extract
 from url import Url
 from config import config
-from modutils import trimf, unique_list
+from modutils import trimf
 
 
 def get(url : str) -> str | None:
@@ -80,28 +79,3 @@ def crawl(start: Url, url: Url = None, searched = None) -> tuple[list[str], int]
         map_count += maps
 
     return (curr_urls + sub_urls, map_count)
-
-def main():
-    if len(sys.argv) < 3:
-        print('Usage: webmap [URL] [OUTPUT_FILE]')
-    url = sys.argv[1]
-    file = sys.argv[2]
-
-    start_time = perf_counter()
-    print('Url:', url)
-
-    urls, map_count = crawl(Url(url))
-    unique_urls = unique_list( [url] + [str(i) for i in urls] )
-
-    delta_time = trimf( perf_counter() - start_time )
-    print('========')
-    print(f'Scanned completed in: {delta_time}s')
-    print(f'Scanned sites: {map_count}')
-    print(f'Mapped endpoints: {len(unique_urls)}')
-
-
-    with open(file, 'w', encoding='utf8') as f:
-        f.write( '\n'.join(unique_urls) )
-
-if __name__ == '__main__':
-    main()
