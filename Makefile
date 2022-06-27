@@ -11,13 +11,11 @@ demo_port := 8080
 demo_url := http://localhost:8080
 
 # Does a test run of the application
-.PHONY: run
-run:
+run::
 	$(py) webmap/main.py map $(demo_url)
 
 # Run pylint on the application
-.PHONY: lint
-lint:
+lint::
 	$(py) -m pylint webmap/*
 
 # Start serving the demo server satic files
@@ -26,6 +24,5 @@ demo::
 		$(py) -m http.server $(demo_port)
 
 # Cleans repostiry of build files
-.PHONY: clean
-clean:
+clean::
 	git clean -fdx
