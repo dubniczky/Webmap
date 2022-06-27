@@ -28,8 +28,8 @@ def parse_site(url : str) -> tuple[list[Url], int, int] | None:
 
     urls = []
     urls += Url.from_list(host, extract.raw_urls(content))
-    urls += Url.from_list(host, extract.hrefs(content))
-    urls += Url.from_list(host, extract.srcs(content))
+    urls += Url.from_list(host, extract.html_hrefs(content))
+    urls += Url.from_list(host, extract.html_srcs(content))
 
     return (remove_ignored(urls), len(content), status)
 
