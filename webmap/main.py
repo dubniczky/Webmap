@@ -59,7 +59,7 @@ unique_urls = unique_list( [args.url] + [str(i) for i in urls] )
 # Print performance
 delta_time = trimf( perf_counter() - start_time )
 print('========')
-print(f'Scanned completed in: {delta_time}s')
+print(f'Scan completed in: {delta_time}s')
 print(f'Scanned sites: {map_count}')
 print(f'Mapped endpoints: {len(unique_urls)}')
 
